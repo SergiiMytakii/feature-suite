@@ -1,29 +1,44 @@
 <div class="container">
-  <div class="features-list">
+  <!-- Left: Features List -->
+  <div class="features-list" 
+       cdkDropList 
+       #basicList="cdkDropList" 
+       [cdkDropListData]="features" 
+       [cdkDropListConnectedTo]="[selectedList]"
+       (cdkDropListDropped)="drop($event)">
     <h3>Select Basic Features</h3>
     <div *ngFor="let feature of features" cdkDrag>
-      <mat-card>{{ feature.name }}</mat-card>
+      <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
     </div>
   </div>
 
-  <!-- Selected Features on the Right -->
-  <div class="selected-features">
+  <!-- Right: Selected Features -->
+  <div class="selected-features" 
+       cdkDropList 
+       #selectedList="cdkDropList" 
+       [cdkDropListData]="selectedFeatures" 
+       [cdkDropListConnectedTo]="[basicList]"
+       (cdkDropListDropped)="drop($event)">
     <h3>Selected Features</h3>
     <div class="light-blue">
-      <div cdkDropList [cdkDropListData]="selectedFeatures" (cdkDropListDropped)="drop($event, selectedFeatures)">
-        <div *ngFor="let feature of selectedFeatures" class="selected-feature" cdkDrag (click)="activateSubList(feature)">
-          <mat-card>{{ feature.name }}</mat-card>
+      <div *ngFor="let feature of selectedFeatures" 
+           class="selected-feature" 
+           cdkDrag 
+           (click)="activateSubList(feature)">
+        <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
 
-          <!-- Nested Drag Area for Sub-Features (visible only if feature is active) -->
-          <div *ngIf="feature.isActive" class="sub-feature-container">
-            <div cdkDropList [cdkDropListData]="feature.subFeatures ?? []" (cdkDropListDropped)="drop($event, feature.subFeatures ?? [])">
-              <div *ngFor="let subFeature of feature.subFeatures" cdkDrag>
-                <mat-card class="indented">{{ subFeature.name }}</mat-card>
-              </div>
-
-              <!-- Placeholder for dragging new features into this sub-list -->
-              <div class="drag-placeholder">Drag here</div>
+        <!-- Sub-Features Section -->
+        <div *ngIf="feature.isActive" class="sub-feature-container">
+          <div cdkDropList 
+               [cdkDropListData]="feature.subFeatures || []"
+               [cdkDropListConnectedTo]="[basicList, selectedList]"
+               (cdkDropListDropped)="dropNested($event, feature)">
+            <div *ngFor="let subFeature of feature.subFeatures" cdkDrag>
+              <mat-card class="indented">{{ subFeature.name }}</mat-card>
             </div>
+
+            <!-- Placeholder for new items -->
+            <div class="drag-placeholder">Drag here</div>
           </div>
         </div>
       </div>

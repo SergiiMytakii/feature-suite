@@ -1,75 +1,91 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule for ngFor and other common directives
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { MatCardModule } from '@angular/material/card';  // Import Material module
-import { DragDropModule } from '@angular/cdk/drag-drop';  // Import CDK DragDrop module
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
+
 interface Feature {
+  id: number;
   name: string;
-  subFeatures?: Feature[]; // Each feature can have sub-features
-  isActive?: boolean;      // Track active feature for dynamic drop zones
+  subFeatures?: Feature[];
+  isActive?: boolean;
 }
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   standalone: true,
-  imports: [
-    MatListModule,       
-    MatCardModule,        
-    DragDropModule,   
-    CommonModule  
-
-  ],
+  imports: [MatListModule, MatCardModule, DragDropModule, CommonModule],
 })
 export class AppComponent {
   features: Feature[] = [
-    { name: 'Feature 1' },
-    { name: 'Feature 2' },
-    { name: 'Feature 3' },
-    { name: 'Feature 4' },
-    { name: 'Feature 5' },
+    { id: 1, name: 'Feature 1' },
+    { id: 2, name: 'Feature 2' },
+    { id: 3, name: 'Feature 3' },
+    { id: 4, name: 'Feature 4' },
+    { id: 5, name: 'Feature 5' },
   ];
 
-  selectedFeatures: Feature[]  = [];
+  selectedFeatures: Feature[] = [];
 
-  drop(event: CdkDragDrop<Feature[]>, targetList: Feature[]) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(targetList, event.previousIndex, event.currentIndex);
+  // Handle top-level drops
+  drop(event: CdkDragDrop<Feature[]>) {
+    console.log('Drop event:', event);
+
+    if (event.previousContainer !== event.container) {
+      const originalFeature = event.previousContainer.data[event.previousIndex];
+
+      const clonedFeature: Feature = {
+        ...originalFeature,
+        subFeatures: [],
+        isActive: false,
+        id: Date.now(),
+      };
+
+      this.selectedFeatures.splice(event.currentIndex, 0, clonedFeature);
     } else {
-      const clonedFeature = { ...event.previousContainer.data[event.previousIndex] };
-      targetList.splice(event.currentIndex, 0, clonedFeature);
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
   }
 
-  // Handle clicking on a feature to activate the nested drop area
-  activateSubList(feature: Feature) {
-    // Toggle the clicked feature's active status
-    feature.isActive = !feature.isActive;
+  // Handle nested drops inside sub-feature containers
+  dropNested(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
+    console.log('Nested Drop event:', event);
 
-    // Deactivate all other features
+    if (event.previousContainer !== event.container) {
+      const originalFeature = event.previousContainer.data[event.previousIndex];
+
+      const clonedSubFeature: Feature = {
+        ...originalFeature,
+        subFeatures: [],
+        isActive: false,
+        id: Date.now(),
+      };
+
+      parentFeature.subFeatures = parentFeature.subFeatures || [];
+      parentFeature.subFeatures.splice(event.currentIndex, 0, clonedSubFeature);
+    } else {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+  }
+
+  // Activate the sub-feature list for a feature
+  activateSubList(feature: Feature) {
+    feature.isActive = !feature.isActive;
     this.deactivateOthers(this.selectedFeatures, feature);
   }
 
-  // Deactivate all other features' active states except the clicked one
+  // Deactivate other features
   deactivateOthers(features: Feature[], activeFeature: Feature) {
     features.forEach((f) => {
       if (f !== activeFeature) {
         f.isActive = false;
       }
-
-      // If there are sub-features, recursively deactivate them too
       if (f.subFeatures) {
         this.deactivateOthers(f.subFeatures, activeFeature);
       }
     });
-  }
-
-  // Add a new sublist (draggable container) to a feature
-  addSubFeature(feature: Feature) {
-    if (!feature.subFeatures) {
-      feature.subFeatures = [];
-    }
-    feature.subFeatures.push({ name: `Sub-feature ${feature.subFeatures.length + 1}` });
   }
 }
