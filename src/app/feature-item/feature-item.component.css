@@ -1,0 +1,19 @@
+.selected-feature {
+    margin-bottom: 10px;
+    padding: 10px;
+  }
+  
+  .sub-feature-container {
+    margin-left: 20px;
+  }
+  
+  .indented {
+    margin-left: 20px;
+  }
+  
+  .drag-placeholder {
+    padding: 10px;
+    border: 1px dashed #ccc;
+    margin-top: 10px;
+  }
+  
