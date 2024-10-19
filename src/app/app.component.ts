@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, ViewChildren, QueryList, AfterViewInit  } from '@angular/core';
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
+import { CdkDropList } from '@angular/cdk/drag-drop';
 
 interface Feature {
   id: number;
@@ -19,7 +20,20 @@ interface Feature {
   standalone: true,
   imports: [MatListModule, MatCardModule, DragDropModule, CommonModule],
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+  @ViewChildren(CdkDropList) dropLists!: QueryList<CdkDropList>;
+
+  ngAfterViewInit() {
+    this.connectDropLists();
+  }
+
+  connectDropLists() {
+    const dropListRefs = this.dropLists.toArray();
+    dropListRefs.forEach((dropList) => {
+      dropList.connectedTo = dropListRefs.filter((dl) => dl !== dropList);
+    });
+  }
+
   features: Feature[] = [
     { id: 1, name: 'Feature 1' },
     { id: 2, name: 'Feature 2' },
@@ -39,7 +53,7 @@ export class AppComponent {
 
       const clonedFeature: Feature = {
         ...originalFeature,
-        subFeatures: [],
+        subFeatures: [ ],
         isActive: false,
         id: Date.now(),
       };
@@ -52,18 +66,19 @@ export class AppComponent {
 
   // Handle nested drops inside sub-feature containers
   dropNested(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
-    
+    console.log('Nested Drop event:');
     if (event.previousContainer !== event.container) {
-      console.log('Nested Drop event:');
       const originalFeature = event.previousContainer.data[event.previousIndex];
-
+  
       const clonedSubFeature: Feature = {
         ...originalFeature,
-        subFeatures: [],
+        subFeatures: [], // Optional: change this if you want to keep original sub-features
         isActive: false,
         id: Date.now(),
+        name: parentFeature.name + ' + ' + originalFeature.name
       };
-
+  
+      // Initialize subFeatures if not already done
       parentFeature.subFeatures = parentFeature.subFeatures || [];
       parentFeature.subFeatures.splice(event.currentIndex, 0, clonedSubFeature);
     } else {
@@ -76,6 +91,9 @@ export class AppComponent {
   activateSubList(feature: Feature) {
     feature.isActive = !feature.isActive;
     this.deactivateOthers(this.selectedFeatures, feature);
+    setTimeout(() => {
+      this.connectDropLists();
+    });
   }
 
   // Deactivate other features
