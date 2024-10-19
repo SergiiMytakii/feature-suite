@@ -52,9 +52,9 @@ export class AppComponent {
 
   // Handle nested drops inside sub-feature containers
   dropNested(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
-    console.log('Nested Drop event:', event);
-
+    
     if (event.previousContainer !== event.container) {
+      console.log('Nested Drop event:');
       const originalFeature = event.previousContainer.data[event.previousIndex];
 
       const clonedSubFeature: Feature = {
@@ -67,6 +67,7 @@ export class AppComponent {
       parentFeature.subFeatures = parentFeature.subFeatures || [];
       parentFeature.subFeatures.splice(event.currentIndex, 0, clonedSubFeature);
     } else {
+      console.log('Nested Drop same container');
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
   }
@@ -86,6 +87,15 @@ export class AppComponent {
       if (f.subFeatures) {
         this.deactivateOthers(f.subFeatures, activeFeature);
       }
+    });
+  }
+  addSubFeature(feature: Feature) {
+    if (!feature.subFeatures) {
+      feature.subFeatures = [];
+    }
+    feature.subFeatures.push({
+      name: `Sub-feature ${feature.subFeatures.length + 1}`,
+      id: Date.now(),
     });
   }
 }

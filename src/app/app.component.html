@@ -1,9 +1,9 @@
 <div class="container">
-  <!-- Left: Features List -->
-  <div class="features-list" 
+  <!-- Left: Basic Features List -->
+  <div class="features-list"
        cdkDropList 
-       #basicList="cdkDropList" 
-       [cdkDropListData]="features" 
+       #basicList="cdkDropList"
+       [cdkDropListData]="features"
        [cdkDropListConnectedTo]="[selectedList]"
        (cdkDropListDropped)="drop($event)">
     <h3>Select Basic Features</h3>
@@ -12,36 +12,37 @@
     </div>
   </div>
 
-  <!-- Right: Selected Features -->
-  <div class="selected-features" 
+  <!-- Right: Selected Features List -->
+  <div class="selected-features"
        cdkDropList 
-       #selectedList="cdkDropList" 
-       [cdkDropListData]="selectedFeatures" 
-       [cdkDropListConnectedTo]="[basicList]"
+       #selectedList="cdkDropList"
+       [cdkDropListData]="selectedFeatures"
+       [cdkDropListConnectedTo]="[basicList, selectedList]"
        (cdkDropListDropped)="drop($event)">
     <h3>Selected Features</h3>
     <div class="light-blue">
-      <div *ngFor="let feature of selectedFeatures" 
-           class="selected-feature" 
-           cdkDrag 
+      <div *ngFor="let feature of selectedFeatures"
+           class="selected-feature"
+           cdkDrag
            (click)="activateSubList(feature)">
         <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
 
-        <!-- Sub-Features Section -->
+        <!-- Nested Drop Area -->
         <div *ngIf="feature.isActive" class="sub-feature-container">
           <div cdkDropList 
-               [cdkDropListData]="feature.subFeatures || []"
+               [cdkDropListData]="feature.subFeatures ?? []"
                [cdkDropListConnectedTo]="[basicList, selectedList]"
                (cdkDropListDropped)="dropNested($event, feature)">
-            <div *ngFor="let subFeature of feature.subFeatures" cdkDrag>
-              <mat-card class="indented">{{ subFeature.name }}</mat-card>
+            <div *ngFor="let subFeature of feature.subFeatures" class="indented" cdkDrag>
+              <mat-card>{{ subFeature.name }}</mat-card>
             </div>
 
-            <!-- Placeholder for new items -->
+            <!-- Placeholder for dragging new items into the sub-list -->
             <div class="drag-placeholder">Drag here</div>
           </div>
         </div>
       </div>
+      <div class="drag-placeholder">Drag here</div>
     </div>
   </div>
 </div>
