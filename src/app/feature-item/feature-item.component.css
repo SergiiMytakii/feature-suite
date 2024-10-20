@@ -1,23 +1,25 @@
 .selected-feature {
-    margin-bottom: 10px;
-    padding: 10px;
-  }
-  
-  .sub-feature-container {
-    margin-left: 30px;
-  }
-  
-  .indented {
-    margin-left: 20px;
-  }
-  
-  .drag-placeholder {
-    padding: 10px;
-    background-color: rgb(196, 222, 231);
-    border: 1px dashed #ccc;
-    text-align: center;
-    margin: 10px;
-    height: 50px;
-  
-  }
-  
+  margin-bottom: 10px;
+  padding: 10px;
+  z-index: 10; 
+}
+
+.sub-feature-container {
+  margin-left: 30px;
+  z-index: 10; 
+}
+
+.indented {
+  margin-left: 20px;
+  z-index: 10; 
+}
+
+.drag-placeholder {
+  padding: 10px;
+  background-color: rgb(196, 222, 231);
+  border: 1px dashed #ccc;
+  text-align: center;
+  margin: 10px;
+  height: 50px;
+  z-index: 10; 
+}
