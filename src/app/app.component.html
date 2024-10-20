@@ -2,10 +2,11 @@
   <!-- Left: Basic Features List -->
   <div class="features-list"
        cdkDropList 
+       
        [cdkDropListData]="features"
        (cdkDropListDropped)="drop($event)">
     <h3>Select Basic Features</h3>
-    <div *ngFor="let feature of features" cdkDrag cdkDragHandle>
+    <div *ngFor="let feature of features" cdkDrag>
       <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
     </div>
   </div>
