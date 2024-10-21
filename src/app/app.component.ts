@@ -56,7 +56,6 @@ export class AppComponent implements AfterViewInit {
 
       }
     }
-    // this.connectDropLists() ;
     console.log('Drop event:', event);
 
     if (event.previousContainer !== event.container) {
@@ -82,6 +81,7 @@ export class AppComponent implements AfterViewInit {
   }
   thereAreActiveFeatures(feature : Feature) : boolean{
     if (feature.isActive) {
+      feature.isActive = false;
       return true;
     } else if (feature.subFeatures) {
       for (const subFeature of feature.subFeatures) {

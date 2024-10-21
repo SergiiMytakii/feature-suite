@@ -45,10 +45,11 @@ export class FeatureItemComponent {
   }
 
   dropNested(event: CdkDragDrop<Feature[]>, feature: Feature) {
-    if (!feature.isActive) {
-      return;
-    }
-    console.log('Nested Drop event:', event);
+    console.log(
+      'Nested Drop event. Parent:', feature.name,
+     
+    );
+  
     if (event.previousContainer !== event.container) {
       const originalFeature = event.previousContainer.data[event.previousIndex];
 
@@ -70,6 +71,7 @@ export class FeatureItemComponent {
   }
   setActive(isActive: boolean,) {
     this.feature.isActive = isActive;
+    console.log('Feature is active:', this.feature.name, isActive);
     this.deactivateOthers(this.feature.subFeatures || [], );
     this.connectDropLists();
   }
@@ -78,12 +80,11 @@ export class FeatureItemComponent {
 
   deactivateOthers(features: Feature[], ) {
     if (this.parentFeature) {
+      console.log('deactivation parent feature', this.parentFeature.name);
       this.parentFeature.isActive = false;
     }
     features.forEach((f) => {
-    
         f.isActive = false;
-      
       if (f.subFeatures) {
         this.deactivateOthers(f.subFeatures,);
       }

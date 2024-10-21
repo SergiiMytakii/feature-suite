@@ -13,16 +13,18 @@
 
   <!-- Right: Selected Features List -->
   <div class="selected-features"
-       cdkDropList 
-       [cdkDropListData]="selectedFeatures"
-       (cdkDropListDropped)="drop($event)">
+     >
     <h6>Selected Features</h6>
     
     <div class="light-blue feature-suite selected-features-container">
       <div *ngFor="let feature of selectedFeatures">
         <app-feature-item [feature]="feature" [dropLists]="dropLists"   (deleteFeatureEvent)="deleteFeature($event)" cdkDrag></app-feature-item>
       </div>
-      <div class="drag-placeholder">Drag here</div>
+      <div class="drag-placeholder"
+      cdkDropList 
+      [cdkDropListData]="selectedFeatures"
+      (cdkDropListDropped)="drop($event)"
+      >Drag here</div>
     </div>
   </div>
 </div>

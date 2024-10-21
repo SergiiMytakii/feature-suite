@@ -1,12 +1,12 @@
 <div>
   <div cdkDropList 
        [cdkDropListData]="feature.subFeatures ?? []" 
-       (cdkDropListDropped)="dropNested($event, feature)">
+      (cdkDropListDropped)="dropNested($event, feature)"
+  >
   <div [ngClass]="{'active-feature': feature.isActive}" (mouseenter)="setActive(true)" (mouseleave)="setActive(false)">
   <mat-card class="selected-feature">
     <div class="card-content">
       {{ feature.name }}
-      <!-- <div class="spacer"></div> -->
       <button mat-icon-button class="delete-button" (click)="deleteFeature(feature)">
         <mat-icon>close</mat-icon>
       </button>
