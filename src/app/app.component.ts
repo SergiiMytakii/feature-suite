@@ -32,7 +32,9 @@ export class AppComponent implements AfterViewInit {
     const dropListRefs = this.dropLists.toArray();
     dropListRefs.forEach((dropList) => {
       dropList.connectedTo = dropListRefs.filter((dl) => dl !== dropList);
-      console.log(dropList.id +  'Drop list connected to:', dropList.connectedTo.toString());
+      console.log(dropList.id + ' Drop list connected to:', dropList.connectedTo
+        .filter((dl): dl is CdkDropList => typeof dl !== 'string')
+        .map((dl) => dl.id));
     });
   }
 
@@ -47,6 +49,14 @@ export class AppComponent implements AfterViewInit {
   selectedFeatures: Feature[] = [];
 
   drop(event: CdkDragDrop<Feature[]>) {
+    for (const feature of this.selectedFeatures){
+      if (this.thereAreActiveFeatures(feature)){
+        console.log('there are active features');
+        return;
+
+      }
+    }
+    // this.connectDropLists() ;
     console.log('Drop event:', event);
 
     if (event.previousContainer !== event.container) {
@@ -69,6 +79,19 @@ export class AppComponent implements AfterViewInit {
     if (index !== -1) {
       this.selectedFeatures.splice(index, 1);
     }
+  }
+  thereAreActiveFeatures(feature : Feature) : boolean{
+    if (feature.isActive) {
+      return true;
+    } else if (feature.subFeatures) {
+      for (const subFeature of feature.subFeatures) {
+        if (this.thereAreActiveFeatures(subFeature)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   }
   
 }

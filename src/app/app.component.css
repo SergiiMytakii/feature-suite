@@ -19,10 +19,18 @@
 
 
 
+.selected-features-container:hover .drag-placeholder {
+  background-color: #b3d9ff; /* Darker blue for hover effect */
+}
+
+.selected-features-container > *:not(.drag-placeholder):hover + .drag-placeholder {
+  background-color: #e6f3ff; /* Reset to original color when hovering over features */
+}
+
 .light-blue {
-  background-color: lightblue;
+  background-color: #e6f3ff;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   min-height: 300px;
   width: 400px;
 }
@@ -44,11 +52,12 @@
 
 .drag-placeholder {
   padding: 10px;
-  background-color: rgb(196, 222, 231);
+  background-color: #e6f3ff;
   border: 1px dashed #ccc;
   text-align: center;
-  margin-top: 10px;
-  height: 50px;
+
+  border-radius: 10px;
+
 
 
 }

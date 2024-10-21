@@ -1,5 +1,9 @@
 <div>
-  <mat-card class="selected-feature" (click)="activateSubList(feature)">
+  <div cdkDropList 
+       [cdkDropListData]="feature.subFeatures ?? []" 
+       (cdkDropListDropped)="dropNested($event, feature)">
+  <div [ngClass]="{'active-feature': feature.isActive}" (mouseenter)="setActive(true)" (mouseleave)="setActive(false)">
+  <mat-card class="selected-feature">
     <div class="card-content">
       {{ feature.name }}
       <!-- <div class="spacer"></div> -->
@@ -8,17 +12,16 @@
       </button>
     </div>
   </mat-card>
+ 
 
   
     <div  class="sub-feature-container">
-      <div cdkDropList 
-           [cdkDropListData]="feature.subFeatures ?? []" 
-           (cdkDropListDropped)="dropNested($event)">
         <div *ngFor="let subFeature of feature.subFeatures" class="indented">
           <app-feature-item [feature]="subFeature" [parentFeature]="feature" [dropLists]="dropLists"></app-feature-item>
         </div>
         <div *ngIf="feature.isActive" class="drag-placeholder">Drag here</div>
       </div>
     </div>
+  </div>
   </div>
   

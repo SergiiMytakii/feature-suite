@@ -34,18 +34,20 @@ export class FeatureItemComponent {
   }
 
   connectDropLists() {
-    console.log('Connecting drop lists');
+    console.log('Connecting drop lists for feature:', this.feature.name);
     const dropListRefs = this.dropLists.toArray().concat(this.localDropLists.toArray());
     dropListRefs.forEach((dropList) => {
       dropList.connectedTo = dropListRefs.filter((dl) => dl !== dropList);
-      console.log(
-        dropList.id + ' Drop list connected to:',
-        dropList.connectedTo.map((dl) => dl.toString())
-      );
+      console.log(dropList.id + ' Drop list connected to:', dropList.connectedTo
+        .filter((dl): dl is CdkDropList => typeof dl !== 'string')
+        .map((dl) => dl.id));
     });
   }
 
-  dropNested(event: CdkDragDrop<Feature[]>) {
+  dropNested(event: CdkDragDrop<Feature[]>, feature: Feature) {
+    if (!feature.isActive) {
+      return;
+    }
     console.log('Nested Drop event:', event);
     if (event.previousContainer !== event.container) {
       const originalFeature = event.previousContainer.data[event.previousIndex];
@@ -55,7 +57,7 @@ export class FeatureItemComponent {
         subFeatures: [],
         isActive: false,
         id: Date.now(),
-        name: this.feature.name + ' + ' + originalFeature.name
+        name: this.feature.name + ' + ' + originalFeature.name.substring(7),
       };
 
       // Initialize subFeatures if not already done
@@ -66,20 +68,24 @@ export class FeatureItemComponent {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
   }
-
-  activateSubList(feature: Feature) {
-    feature.isActive = !feature.isActive;
-    this.deactivateOthers(this.feature.subFeatures || [], feature);
+  setActive(isActive: boolean,) {
+    this.feature.isActive = isActive;
+    this.deactivateOthers(this.feature.subFeatures || [], );
     this.connectDropLists();
   }
+  
 
-  deactivateOthers(features: Feature[], activeFeature: Feature) {
+
+  deactivateOthers(features: Feature[], ) {
+    if (this.parentFeature) {
+      this.parentFeature.isActive = false;
+    }
     features.forEach((f) => {
-      if (f !== activeFeature) {
+    
         f.isActive = false;
-      }
+      
       if (f.subFeatures) {
-        this.deactivateOthers(f.subFeatures, activeFeature);
+        this.deactivateOthers(f.subFeatures,);
       }
     });
   }
