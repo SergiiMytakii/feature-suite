@@ -1,7 +1,8 @@
-import { Component, Input, QueryList, ViewChildren } from '@angular/core';
+import { Component, EventEmitter, Input, Output, QueryList, ViewChildren } from '@angular/core';
 import { CdkDragDrop, CdkDropList, DragDropModule, moveItemInArray, } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 
 interface Feature {
@@ -16,7 +17,7 @@ interface Feature {
   templateUrl: './feature-item.component.html',
   styleUrls: ['./feature-item.component.css'],
   standalone: true,
-  imports: [MatListModule, MatCardModule, DragDropModule, CommonModule],
+  imports: [MatListModule, MatCardModule, DragDropModule, CommonModule, MatIconModule],
   
 })
 export class FeatureItemComponent {
@@ -24,6 +25,7 @@ export class FeatureItemComponent {
   @Input() feature!: Feature;
   @Input() parentFeature?: Feature;
   @Input() dropLists!: QueryList<CdkDropList>;
+  @Output() deleteFeatureEvent = new EventEmitter<Feature>();
 
   @ViewChildren(CdkDropList) localDropLists!: QueryList<CdkDropList>;
 
@@ -80,5 +82,13 @@ export class FeatureItemComponent {
         this.deactivateOthers(f.subFeatures, activeFeature);
       }
     });
+  }
+
+  deleteFeature(feature: Feature) {
+    if (this.parentFeature && this.parentFeature.subFeatures) {
+      this.parentFeature.subFeatures = this.parentFeature.subFeatures.filter(f => f.id !== feature.id);
+    } else {
+      this.deleteFeatureEvent.emit(feature);
+    }
   }
 }

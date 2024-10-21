@@ -1,7 +1,14 @@
 <div>
-    <mat-card class="selected-feature" (click)="activateSubList(feature)">
+  <mat-card class="selected-feature" (click)="activateSubList(feature)">
+    <div class="card-content">
       {{ feature.name }}
-    </mat-card>
+      <!-- <div class="spacer"></div> -->
+      <button mat-icon-button class="delete-button" (click)="deleteFeature(feature)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+  </mat-card>
+
   
     <div  class="sub-feature-container">
       <div cdkDropList 

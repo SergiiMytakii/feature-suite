@@ -64,5 +64,11 @@ export class AppComponent implements AfterViewInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
   }
+  deleteFeature(feature: Feature) {
+    const index = this.selectedFeatures.indexOf(feature);
+    if (index !== -1) {
+      this.selectedFeatures.splice(index, 1);
+    }
+  }
   
 }

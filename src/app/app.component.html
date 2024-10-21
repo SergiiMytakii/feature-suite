@@ -8,6 +8,7 @@
     <h6>Select Basic Features</h6>
     <div *ngFor="let feature of features" cdkDrag>
       <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
+        <div *cdkDragPlaceholder></div>   
     </div>
   </div>
 
@@ -20,7 +21,7 @@
     
     <div class="light-blue">
       <div *ngFor="let feature of selectedFeatures">
-        <app-feature-item [feature]="feature" [dropLists]="dropLists"></app-feature-item>
+        <app-feature-item [feature]="feature" [dropLists]="dropLists"   (deleteFeatureEvent)="deleteFeature($event)"></app-feature-item>
       </div>
       <div class="drag-placeholder">Drag here</div>
     </div>
