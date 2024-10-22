@@ -6,13 +6,9 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
 import { CdkDropList } from '@angular/cdk/drag-drop';
 import { FeatureItemComponent } from './feature-item/feature-item.component';
+import { Feature } from './models/feature';
 
-interface Feature {
-  id: number;
-  name: string;
-  subFeatures?: Feature[];
-  isActive?: boolean;
-}
+
 
 @Component({
   selector: 'app-root',
@@ -23,46 +19,57 @@ interface Feature {
 })
 export class AppComponent implements AfterViewInit {
   @ViewChildren(CdkDropList) dropLists!: QueryList<CdkDropList>;
+  public get connectedDropListsIds(): string[] {
+    return this.getIdsRecursive( this.parentFeature).reverse();
+  }
 
   ngAfterViewInit() {
-    this.connectDropLists();
+    this.getIdsRecursive( this.parentFeature).reverse();
   }
 
-  connectDropLists() {
-    const dropListRefs = this.dropLists.toArray();
-    dropListRefs.forEach((dropList) => {
-      dropList.connectedTo = dropListRefs.filter((dl) => dl !== dropList);
-      console.log(dropList.id +  'Drop list connected to:', dropList.connectedTo.toString());
-    });
-  }
-
+  parentFeature: Feature = { id: '0', name: 'parent', subFeatures: [] };
   features: Feature[] = [
-    { id: 1, name: 'Feature 1' },
-    { id: 2, name: 'Feature 2' },
-    { id: 3, name: 'Feature 3' },
-    { id: 4, name: 'Feature 4' },
-    { id: 5, name: 'Feature 5' },
+    { id: '1', name: 'Feature 1' },
+    { id:' 2', name: 'Feature 2' },
+    { id: '3', name: 'Feature 3' },
+    { id: '4', name: 'Feature 4' },
+    { id: '5', name: 'Feature 5' },
   ];
 
-  selectedFeatures: Feature[] = [];
+  
 
-  drop(event: CdkDragDrop<Feature[]>) {
+  drop(
+    event: CdkDragDrop<Feature[]>,
+    parentFeature: Feature
+  ) {
     console.log('Drop event:', event);
-
+    // event.container.element.nativeElement.classList.remove('active');
     if (event.previousContainer !== event.container) {
       const originalFeature = event.previousContainer.data[event.previousIndex];
-
+      console.log('Original Feature:', originalFeature);
+      const maxId = Math.max(
+        ...this.features.map(f => parseInt(f.id)),
+        ...this.getIdsRecursive(this.parentFeature).map(id => parseInt(id))
+      );
       const clonedFeature: Feature = {
         ...originalFeature,
         subFeatures: [],
         isActive: false,
-        id: Date.now(),
+        id: (maxId + 1).toString(),
       };
-
-      this.selectedFeatures.splice(event.currentIndex, 0, clonedFeature);
+console.log('Cloned Feature:', clonedFeature);
+      parentFeature.subFeatures?.push(clonedFeature);
+      console.log('Parent Feature:', parentFeature);
     } else {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
+    // this.connectDropLists();
+  }
+  private getIdsRecursive(feature: Feature): string[] {
+    let ids = [feature.id];
+    if (!feature.subFeatures) return ids;
+    feature.subFeatures.forEach((subFeature) => { ids = ids.concat(this.getIdsRecursive(subFeature)) });
+    return ids;
   }
   
 }
