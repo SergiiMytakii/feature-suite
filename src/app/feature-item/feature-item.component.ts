@@ -25,7 +25,7 @@ export class FeatureItemComponent {
   @Input() public set connectedDropListsIds(ids: string[]) {
     this.allDropListsIds = ids;
 
-    console.log('Connected drop lists IDs in child:', this.allDropListsIds);
+    // console.log('Connected drop lists IDs in child:', this.allDropListsIds);
   }
   @Output() dropEmitter = new EventEmitter<CdkDragDrop<Feature[]>>();
 
@@ -34,7 +34,7 @@ export class FeatureItemComponent {
 
 
   dropNested(event: CdkDragDrop<Feature[]>) {
-    console.log('Nested Drop event:', event);
+    // console.log('Nested Drop event:', event);
     this.dropEmitter.emit(event);
     }
 
