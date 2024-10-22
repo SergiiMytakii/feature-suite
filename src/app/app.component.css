@@ -48,6 +48,11 @@
 
 }
 
+.drag-placeholder:hover {
+  background-color: #afcee9;
+  transition: background-color 0.3s ease;
+}
+
 .indented {
   margin-left: 30px;
   padding: 10px;

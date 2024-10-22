@@ -9,6 +9,7 @@
     <h3>Select Basic Features</h3>
     <div *ngFor="let feature of features" cdkDrag cdkDragHandle>
       <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
+      <div *cdkDragPlaceholder></div>   
     </div>
   </div>
 

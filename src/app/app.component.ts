@@ -27,7 +27,7 @@ export class AppComponent implements AfterViewInit {
     this.getIdsRecursive( this.parentFeature).reverse();
   }
 
-  parentFeature: Feature = { id: '0', name: 'parent', subFeatures: [] };
+  parentFeature: Feature = { id: '0', name: 'Feature', subFeatures: [] };
   features: Feature[] = [
     { id: '1', name: 'Feature 1' },
     { id:' 2', name: 'Feature 2' },
@@ -44,24 +44,17 @@ export class AppComponent implements AfterViewInit {
   ) {
     console.log('Drop event:', event);
     // event.container.element.nativeElement.classList.remove('active');
-    if (event.previousContainer !== event.container) {
-      const originalFeature = event.previousContainer.data[event.previousIndex];
-      console.log('Original Feature:', originalFeature);
-      const maxId = Math.max(
-        ...this.features.map(f => parseInt(f.id)),
-        ...this.getIdsRecursive(this.parentFeature).map(id => parseInt(id))
-      );
-      const clonedFeature: Feature = {
-        ...originalFeature,
-        subFeatures: [],
-        isActive: false,
-        id: (maxId + 1).toString(),
-      };
-console.log('Cloned Feature:', clonedFeature);
-      parentFeature.subFeatures?.push(clonedFeature);
-      console.log('Parent Feature:', parentFeature);
-    } else {
+    if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      const draggedFeature = event.previousContainer.data[event.previousIndex];
+      const newSubFeature: Feature = {
+        ...draggedFeature,
+        id: Date.now().toString(),
+        subFeatures: [],
+        name: parentFeature.name + ' + ' + draggedFeature.name.substring(7),
+      };
+      event.container.data.splice(event.currentIndex, 0, newSubFeature);
     }
     // this.connectDropLists();
   }
