@@ -23,9 +23,7 @@ export class FeatureItemComponent {
   @Input() parentFeature?: Feature;
   @Input() dropLists?: QueryList<CdkDropList>;
   @Input() public set connectedDropListsIds(ids: string[]) {
-    this.allDropListsIds = ids;
-
-    // console.log('Connected drop lists IDs in child:', this.allDropListsIds);
+    // console.log('dropLists IDs in ', this.feature.name,  ids);
   }
   @Output() dropEmitter = new EventEmitter<CdkDragDrop<Feature[]>>();
 

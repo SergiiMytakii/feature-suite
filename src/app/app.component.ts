@@ -13,7 +13,6 @@ import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatListModule } from '@angular/material/list';
-import { CdkDropList } from '@angular/cdk/drag-drop';
 import { FeatureItemComponent } from './feature-item/feature-item.component';
 import { Feature } from './models/feature';
 
@@ -30,15 +29,12 @@ import { Feature } from './models/feature';
     FeatureItemComponent,
   ],
 })
-export class AppComponent implements AfterViewInit {
-  @ViewChildren(CdkDropList) dropLists!: QueryList<CdkDropList>;
+export class AppComponent  {
   public get connectedDropListsIds(): string[] {
     return this.getIdsRecursive(this.rootFeature).reverse();
   }
 
-  ngAfterViewInit() {
-    this.getIdsRecursive(this.rootFeature).reverse();
-  }
+
 
   rootFeature: Feature = {
     id: '0',
@@ -56,9 +52,9 @@ export class AppComponent implements AfterViewInit {
   maxLevel = 4;
 
   drop(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
-    // console.log('Drop event:', event);
-    event.container.element.nativeElement.classList.remove('active');
+    event.previousContainer.element.nativeElement.classList.remove('active');
     if (event.previousContainer === event.container) {
+      console.log(event.previousContainer);
       moveItemInArray(
         event.container.data,
         event.previousIndex,
@@ -66,6 +62,7 @@ export class AppComponent implements AfterViewInit {
       );
     } else {
       const draggedFeature = event.previousContainer.data[event.previousIndex];
+      console.log('Dragged feature:', draggedFeature);
       
       // prevent to go over the max level
       const nestedLevels = calculateNestedLevels(this.rootFeature);
@@ -82,7 +79,8 @@ export class AppComponent implements AfterViewInit {
           name: parentFeature.name + ' + ' + draggedFeature.name.substring(7),
           level: nestedLevels,
         };
-        event.container.data.splice(event.currentIndex, 0, newSubFeature);
+        event.container.data.push(newSubFeature);
+        
       } else {
         transferArrayItem(
           event.previousContainer.data,
