@@ -22,9 +22,10 @@
       (cdkDropListDropped)="drop($event, parentFeature)">
     <h3>Selected Features</h3>
     
-    <div class="light-blue">
+    <div class="light-blue" >
       <div *ngFor="let feature of parentFeature.subFeatures" >
         <app-feature-item 
+        cdkDrag
         [feature]="feature" 
         [connectedDropListsIds]="connectedDropListsIds" 
         (dropEmitter)="drop($event, feature)" 

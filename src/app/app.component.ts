@@ -38,10 +38,7 @@ export class AppComponent implements AfterViewInit {
 
   
 
-  drop(
-    event: CdkDragDrop<Feature[]>,
-    parentFeature: Feature
-  ) {
+  drop( event: CdkDragDrop<Feature[]>, parentFeature: Feature ) {
     console.log('Drop event:', event);
     // event.container.element.nativeElement.classList.remove('active');
     if (event.previousContainer === event.container) {

@@ -24,6 +24,7 @@
       <div class="drag-placeholder">Drag here</div>
       <div *ngFor="let subFeature of feature.subFeatures" class="indented">
         <app-feature-item 
+        cdkDrag
           [feature]="subFeature" 
           [parentFeature]="feature"
           [connectedDropListsIds]="connectedDropListsIds"
