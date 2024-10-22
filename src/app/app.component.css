@@ -20,7 +20,7 @@
 .light-blue {
   background-color: lightblue;
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 10px;
   min-height: 300px;
   width: 300px;
 }
@@ -44,7 +44,7 @@
   border: 1px dashed #ccc;
   text-align: center;
   margin-top: 10px;
-  height: 50px;
+  border-radius: 10px;
 
 }
 

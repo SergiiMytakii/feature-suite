@@ -20,22 +20,22 @@ import { Feature } from './models/feature';
 export class AppComponent implements AfterViewInit {
   @ViewChildren(CdkDropList) dropLists!: QueryList<CdkDropList>;
   public get connectedDropListsIds(): string[] {
-    return this.getIdsRecursive( this.parentFeature).reverse();
+    return this.getIdsRecursive( this.rootFeature).reverse();
   }
 
   ngAfterViewInit() {
-    this.getIdsRecursive( this.parentFeature).reverse();
+    this.getIdsRecursive( this.rootFeature).reverse();
   }
 
-  parentFeature: Feature = { id: '0', name: 'Feature', subFeatures: [] };
+  rootFeature: Feature = { id: '0', name: 'Feature', subFeatures: [] , level: 0};
   features: Feature[] = [
-    { id: '1', name: 'Feature 1' },
-    { id:' 2', name: 'Feature 2' },
-    { id: '3', name: 'Feature 3' },
-    { id: '4', name: 'Feature 4' },
-    { id: '5', name: 'Feature 5' },
+    { id: '1', name: 'Feature 1', level: 0 },
+    { id:' 2', name: 'Feature 2' , level: 0},
+    { id: '3', name: 'Feature 3' , level: 0},
+    { id: '4', name: 'Feature 4' , level: 0},
+    { id: '5', name: 'Feature 5' , level: 0},
   ];
-
+  maxLevel = 3;
   
 
   drop( event: CdkDragDrop<Feature[]>, parentFeature: Feature ) {
@@ -45,15 +45,21 @@ export class AppComponent implements AfterViewInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       const draggedFeature = event.previousContainer.data[event.previousIndex];
+      const nestedLevels = calculateNestedLevels(this.rootFeature);
+      console.log('nestedLevels: ',  nestedLevels);
+      if (nestedLevels >= this.maxLevel) {
+        alert('Maximum level reached');
+        return;
+      }
       const newSubFeature: Feature = {
         ...draggedFeature,
         id: Date.now().toString(),
         subFeatures: [],
         name: parentFeature.name + ' + ' + draggedFeature.name.substring(7),
+        level: nestedLevels,
       };
       event.container.data.splice(event.currentIndex, 0, newSubFeature);
     }
-    // this.connectDropLists();
   }
   private getIdsRecursive(feature: Feature): string[] {
     let ids = [feature.id];
@@ -62,4 +68,18 @@ export class AppComponent implements AfterViewInit {
     return ids;
   }
   
+}
+
+function calculateNestedLevels(rootFeature: Feature): number {
+  if (!rootFeature.subFeatures || rootFeature.subFeatures.length === 0) {
+    return 0
+  }
+  
+  let maxDepth = 0
+  for (const subFeature of rootFeature.subFeatures) {
+    const subDepth = calculateNestedLevels(subFeature)
+    maxDepth = Math.max(maxDepth, subDepth)
+  }
+  
+  return maxDepth + 1
 }

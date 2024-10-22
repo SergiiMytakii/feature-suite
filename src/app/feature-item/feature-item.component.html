@@ -21,12 +21,13 @@
       [cdkDropListConnectedTo]="connectedDropListsIds"
       (cdkDropListDropped)="dropNested($event)">
     
-      <div class="drag-placeholder">Drag here</div>
+      <div *ngIf="feature.level < maxLevel-1" class="drag-placeholder">Drag here</div>
       <div *ngFor="let subFeature of feature.subFeatures" class="indented">
         <app-feature-item 
-        cdkDrag
+          cdkDrag
           [feature]="subFeature" 
           [parentFeature]="feature"
+          [maxLevel]="maxLevel"
           [connectedDropListsIds]="connectedDropListsIds"
           (dropEmitter)="dropNested($event)"
         ></app-feature-item>

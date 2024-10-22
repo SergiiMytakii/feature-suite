@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 })
 export class FeatureItemComponent {
 
+  @Input() maxLevel!: number;
   @Input() feature!: Feature;
   @Input() parentFeature?: Feature;
   @Input() dropLists?: QueryList<CdkDropList>;

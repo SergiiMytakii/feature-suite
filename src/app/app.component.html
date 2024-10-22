@@ -1,12 +1,12 @@
 <div class="container">
   <!-- Left: Basic Features List -->
   <div class="features-list"
-    cdkDropList 
-    [cdkDropListData]="features"
-    [cdkDropListConnectedTo]="connectedDropListsIds"
-    (cdkDropListDropped)="drop($event, parentFeature)"
-  >
-    <h3>Select Basic Features</h3>
+        cdkDropList 
+        [cdkDropListData]="features"
+        [cdkDropListConnectedTo]="connectedDropListsIds"
+        (cdkDropListDropped)="drop($event, rootFeature)"
+      >
+    <h6>Select Basic Features</h6>
     <div *ngFor="let feature of features" cdkDrag cdkDragHandle>
       <mat-card class="mat-card-custom">{{ feature.name }}</mat-card>
       <div *cdkDragPlaceholder></div>   
@@ -16,20 +16,21 @@
   <!-- Right: Selected Features List -->
   <div class="selected-features"
       cdkDropList 
-      [id]="parentFeature.id"
-      [cdkDropListData]="parentFeature.subFeatures || []"
+      [id]="rootFeature.id"
+      [cdkDropListData]="rootFeature.subFeatures || []"
       [cdkDropListConnectedTo]="connectedDropListsIds"
-      (cdkDropListDropped)="drop($event, parentFeature)">
-    <h3>Selected Features</h3>
+      (cdkDropListDropped)="drop($event, rootFeature)">
+    <h6>Selected Features</h6>
     
     <div class="light-blue" >
-      <div *ngFor="let feature of parentFeature.subFeatures" >
+      <div *ngFor="let feature of rootFeature.subFeatures" >
         <app-feature-item 
-        cdkDrag
-        [feature]="feature" 
-        [connectedDropListsIds]="connectedDropListsIds" 
-        (dropEmitter)="drop($event, feature)" 
-        [parentFeature]="parentFeature"></app-feature-item>
+            cdkDrag
+            [feature]="feature" 
+            [connectedDropListsIds]="connectedDropListsIds" 
+            (dropEmitter)="drop($event, feature)" 
+            [maxLevel]="maxLevel"
+            [parentFeature]="rootFeature"></app-feature-item>
       </div>
       <div class="drag-placeholder">Drag here</div>
     </div>
