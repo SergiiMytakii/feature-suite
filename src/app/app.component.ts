@@ -38,22 +38,6 @@ export class AppComponent  {
     id: '0',
     name: 'Feature',
     subFeatures: [],
-    // subFeatures: [
-    //   {
-    //     id: '198088',
-    //     name: 'Feature 1',
-    //     level: 0,
-    //     subFeatures: [
- 
-       
-    //       { id: '19797987', name: 'Feature 1', level: 0 , subFeatures: [
-    //         { id: '198088', name: 'Feature 1', level: 0 },] },
-    //         { id: '198088', name: 'Feature 1', level: 0 },
-    //     ],
-    //   },
-    
-      
-    // ],
     level: 0,
   };
  basicFeatures: Feature[] = [
@@ -88,7 +72,7 @@ export class AppComponent  {
   drop(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
     event.previousContainer.element.nativeElement.classList.remove('active');
     if (event.previousContainer === event.container) {
-      console.log(event.previousContainer);
+      // console.log(event.previousContainer);
       moveItemInArray(
         event.container.data,
         event.previousIndex,
@@ -96,7 +80,7 @@ export class AppComponent  {
       );
     } else {
       const draggedFeature = event.previousContainer.data[event.previousIndex];
-      console.log('Dragged feature:', draggedFeature);
+      // console.log('Dragged feature:', draggedFeature);
       
       // prevent to go over the max level
       const nestedLevels = calculateNestedLevels(this.rootFeature);
@@ -113,7 +97,14 @@ export class AppComponent  {
           name: parentFeature.name + ' + ' + draggedFeature.name.substring(7),
           level: nestedLevels,
         };
-        event.container.data.push(newSubFeature);
+        //  event.container.data.push(newSubFeature);
+
+        this.addFeatureToParent(
+          event.container.id,
+          newSubFeature
+        );
+        console.log( this.rootFeature);
+  
         
       } else {
         transferArrayItem(
@@ -125,6 +116,47 @@ export class AppComponent  {
       }
     }
   }
+
+// helper method to find and add the feature to the correct parent
+private addFeatureToParent(
+  parentFeatureId: string, 
+  newFeature: Feature
+): boolean {
+  // Check if the parent is the root feature
+  if (this.rootFeature.id === parentFeatureId) {
+    if (!this.rootFeature.subFeatures) {
+      this.rootFeature.subFeatures = [];
+    }
+    this.rootFeature.subFeatures.push(newFeature);
+    return true;
+  }
+
+  // Recursive function to search through the feature tree
+  const findAndAddToParent = (feature: Feature): boolean => {
+    if (!feature.subFeatures) {
+      return false;
+    }
+
+    // Check if current feature is the parent we're looking for
+    if (feature.id === parentFeatureId) {
+      feature.subFeatures.push(newFeature);
+      return true;
+    }
+
+    // Search through subfeatures
+    for (const subFeature of feature.subFeatures) {
+      if (findAndAddToParent(subFeature)) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  return findAndAddToParent(this.rootFeature);
+}
+
+
   private getIdsRecursive(feature: Feature): string[] {
     let ids = [feature.id];
     if (!feature.subFeatures) return ids;
