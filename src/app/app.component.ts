@@ -34,20 +34,53 @@ export class AppComponent  {
     return this.getIdsRecursive(this.rootFeature).reverse();
   }
 
-
-
   rootFeature: Feature = {
     id: '0',
     name: 'Feature',
-    subFeatures: [],
+    subFeatures: [
+      {
+        id: '198088',
+        name: 'Feature 1',
+        level: 0,
+        subFeatures: [
+ 
+       
+          { id: '19797987', name: 'Feature 1', level: 0 , subFeatures: [
+            { id: '198088', name: 'Feature 1', level: 0 },] },
+            { id: '198088', name: 'Feature 1', level: 0 },
+        ],
+      },
+    
+      
+    ],
     level: 0,
   };
-  basicFeatures: Feature[] = [
+ basicFeatures: Feature[] = [
     { id: '1', name: 'Feature 1', level: 0 },
     { id: '2', name: 'Feature 2', level: 0 },
     { id: '3', name: 'Feature 3', level: 0 },
     { id: '4', name: 'Feature 4', level: 0 },
     { id: '5', name: 'Feature 5', level: 0 },
+    { id: '6', name: 'Feature 6', level: 0 },
+    { id: '7', name: 'Feature 7', level: 0 },
+    { id: '8', name: 'Feature 8', level: 0 },
+    { id: '9', name: 'Feature 9', level: 0 },
+    { id: '10', name: 'Feature 10', level: 0 },
+    { id: '11', name: 'Feature 11', level: 0 },
+    { id: '12', name: 'Feature 12', level: 0 },
+    { id: '13', name: 'Feature 13', level: 0 },
+    { id: '14', name: 'Feature 14', level: 0 },
+    { id: '15', name: 'Feature 15', level: 0 },
+    { id: '16', name: 'Feature 16', level: 0 },
+    { id: '17', name: 'Feature 17', level: 0 },
+    { id: '18', name: 'Feature 18', level: 0 },
+    { id: '19', name: 'Feature 19', level: 0 },
+    { id: '20', name: 'Feature 20', level: 0 },
+    { id: '21', name: 'Feature 21', level: 0 },
+    { id: '22', name: 'Feature 22', level: 0 },
+    { id: '23', name: 'Feature 23', level: 0 },
+    { id: '24', name: 'Feature 24', level: 0 },
+    { id: '25', name: 'Feature 25', level: 0 },
   ];
   maxLevel = 4;
 
