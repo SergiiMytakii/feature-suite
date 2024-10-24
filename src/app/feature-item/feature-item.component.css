@@ -49,9 +49,10 @@
     content: '';
     position: absolute;
     left: 0;
-    top: -120px;
+    top: calc(-120px * var(--items-between));
     width: 2px;
-    height: 120px;
+    height: calc(120px * var(--items-between));
+  /* height: 120px; */
     background-color:#4558e8;
   }
 

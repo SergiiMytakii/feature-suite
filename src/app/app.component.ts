@@ -70,7 +70,6 @@ export class AppComponent  {
   maxLevel = 4;
 
   drop(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
-    event.previousContainer.element.nativeElement.classList.remove('active');
     if (event.previousContainer === event.container) {
       // console.log(event.previousContainer);
       moveItemInArray(
@@ -82,12 +81,14 @@ export class AppComponent  {
       const draggedFeature = event.previousContainer.data[event.previousIndex];
       // console.log('Dragged feature:', draggedFeature);
       
-      // prevent to go over the max level
+      // prevent to go over the max level of nested features
       const nestedLevels = calculateNestedLevels(this.rootFeature);
-      if (nestedLevels > this.maxLevel) {
-        alert('Maximum level reached');
-        return;
-      }
+      //uncoment later
+      // if (nestedLevels > this.maxLevel) {
+      //   alert('Maximum level reached');
+      //   return;
+      // }
+
       //if it is basic feature, create a copy of it. If not , just move it.
       if (this.basicFeatures.map((f) => f.id).includes(draggedFeature.id)) {
         const newSubFeature: Feature = {
@@ -103,7 +104,7 @@ export class AppComponent  {
           event.container.id,
           newSubFeature
         );
-        console.log( this.rootFeature);
+        // console.log( this.rootFeature);
   
         
       } else {

@@ -26,7 +26,7 @@ export class FeatureItemComponent {
     // console.log('dropLists IDs in ', this.feature.name,  ids);
   }
   @Output() dropEmitter = new EventEmitter<CdkDragDrop<Feature[]>>();
-
+  console = console;
   public allDropListsIds: string[] = [];
  
 
@@ -41,5 +41,23 @@ export class FeatureItemComponent {
       if (this.parentFeature && this.parentFeature.subFeatures) {
         this.parentFeature.subFeatures = this.parentFeature.subFeatures.filter(f => f.id !== feature.id);
       } 
+    }
+    getTotalSubfeatures(feature: Feature): number {
+      let total = feature.subFeatures?.length ?? 0;
+      feature.subFeatures?.forEach(subFeature => {
+        total += this.getTotalSubfeatures(subFeature);
+      });
+      return total;
+    }
+    getFeaturesBetweenFeatureAndLastSubfeature(feature: Feature, subFeature: Feature): number{
+      let total = this.getTotalSubfeatures(feature);
+    let totalInSubfeatures = this.getTotalSubfeatures(subFeature);
+      total -= totalInSubfeatures;
+
+      if (total === 1 || total === 0 || total === 2) {
+        return 1;
+      }
+
+      return total - 1;
     }
 }

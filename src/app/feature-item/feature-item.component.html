@@ -21,9 +21,13 @@
       [cdkDropListConnectedTo]="connectedDropListsIds"
       (cdkDropListDropped)="dropNested($event)">
     
-      <div *ngIf="feature.level < maxLevel-1" class="drag-placeholder">Drag here</div>
-      <div *ngFor="let subFeature of feature.subFeatures; let last = last" class="indented">
-        <div [class]="last ? 'connection-line' : 'connection-line-two-sides'"></div>
+      <div *ngIf="feature.level <= maxLevel" class="drag-placeholder">Drag here</div>
+      <div *ngFor="let subFeature of feature.subFeatures; let last = last; let first = first; let i = index " class="indented">
+        <div [class]="last ? 'connection-line' : 'connection-line-two-sides'"
+        [style.--items-between]="last ? getFeaturesBetweenFeatureAndLastSubfeature(feature, subFeature) : 1"
+        
+        ></div>
+        {{ console.log(subFeature.name, getFeaturesBetweenFeatureAndLastSubfeature(feature, subFeature), 'last:',last) }}
         <app-feature-item 
         cdkDrag
         [feature]="subFeature" 
