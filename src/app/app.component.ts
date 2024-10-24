@@ -94,7 +94,7 @@ export class AppComponent  {
           ...draggedFeature,
           id: Date.now().toString(),
           subFeatures: [],
-          name: parentFeature.name + ' + ' + draggedFeature.name.substring(7),
+
           level: nestedLevels,
         };
         //  event.container.data.push(newSubFeature);
@@ -140,6 +140,7 @@ private addFeatureToParent(
     // Check if current feature is the parent we're looking for
     if (feature.id === parentFeatureId) {
       feature.subFeatures.push(newFeature);
+        newFeature.name = feature.name + ' + ' + newFeature.name.substring(7);
       return true;
     }
 
