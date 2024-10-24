@@ -37,22 +37,23 @@ export class AppComponent  {
   rootFeature: Feature = {
     id: '0',
     name: 'Feature',
-    subFeatures: [
-      {
-        id: '198088',
-        name: 'Feature 1',
-        level: 0,
-        subFeatures: [
+    subFeatures: [],
+    // subFeatures: [
+    //   {
+    //     id: '198088',
+    //     name: 'Feature 1',
+    //     level: 0,
+    //     subFeatures: [
  
        
-          { id: '19797987', name: 'Feature 1', level: 0 , subFeatures: [
-            { id: '198088', name: 'Feature 1', level: 0 },] },
-            { id: '198088', name: 'Feature 1', level: 0 },
-        ],
-      },
+    //       { id: '19797987', name: 'Feature 1', level: 0 , subFeatures: [
+    //         { id: '198088', name: 'Feature 1', level: 0 },] },
+    //         { id: '198088', name: 'Feature 1', level: 0 },
+    //     ],
+    //   },
     
       
-    ],
+    // ],
     level: 0,
   };
  basicFeatures: Feature[] = [
