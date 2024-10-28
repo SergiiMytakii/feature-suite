@@ -4,7 +4,7 @@
         cdkDropList 
         [cdkDropListData]="basicFeatures"
         [cdkDropListConnectedTo]="connectedDropListsIds"
-        (cdkDropListDropped)="drop($event, rootFeature)"
+        (cdkDropListDropped)="drop($event)"
       >
     <h6>Select Basic Features</h6>
     <div *ngFor="let feature of basicFeatures" cdkDrag cdkDragHandle>
@@ -19,7 +19,7 @@
       [id]="rootFeature.id"
       [cdkDropListData]="rootFeature.subFeatures || []"
       [cdkDropListConnectedTo]="connectedDropListsIds"
-      (cdkDropListDropped)="drop($event, rootFeature)">
+      (cdkDropListDropped)="drop($event)">
     <h6>Selected Features</h6>
     
     <div class="light-blue" >
@@ -28,7 +28,7 @@
             cdkDrag
             [feature]="feature" 
             [connectedDropListsIds]="connectedDropListsIds" 
-            (dropEmitter)="drop($event, feature)" 
+            (dropEmitter)="drop($event)" 
             [maxLevel]="maxLevel"
             [parentFeature]="rootFeature"></app-feature-item>
       </div>

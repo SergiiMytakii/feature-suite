@@ -67,9 +67,9 @@ export class AppComponent {
     { id: '24', name: 'Feature 24', level: 0 },
     { id: '25', name: 'Feature 25', level: 0 },
   ];
-  maxLevel = 4;
+  maxLevel = 3;
 
-  drop(event: CdkDragDrop<Feature[]>, parentFeature: Feature) {
+  drop(event: CdkDragDrop<Feature[]>) {
     if (event.previousContainer === event.container) {
       // console.log(event.previousContainer);
       moveItemInArray(
@@ -82,9 +82,10 @@ export class AppComponent {
       // console.log('Dragged feature:', draggedFeature);
 
       // prevent to go over the max level of nested features
-      const nestedLevels = this.calculateNestedLevels(parentFeature);
+      const parentFeature = this.findFeature(event.container.id);
+      console.log('Parent feature:', parentFeature);
       //uncoment later
-      if (nestedLevels > this.maxLevel - 1) {
+      if (parentFeature.level > this.maxLevel) {
         alert('Maximum level reached');
         return;
       }
@@ -95,7 +96,7 @@ export class AppComponent {
           ...draggedFeature,
           id: Date.now().toString(),
           subFeatures: [],
-          level: nestedLevels + 1,
+          level: parentFeature.level + 1,
         };
         //  event.container.data.push(newSubFeature);
         this.addFeatureToParent(event.container.id, newSubFeature);
@@ -109,6 +110,24 @@ export class AppComponent {
         );
       }
     }
+  }
+  private findFeature(featureId: string): Feature {
+    const findFeatureById = (feature: Feature, id: string): Feature | null => {
+      if (feature.id === id) {
+        return feature;
+      }
+      if (feature.subFeatures) {
+        for (const subFeature of feature.subFeatures) {
+          const foundFeature = findFeatureById(subFeature, id);
+          if (foundFeature) {
+            return foundFeature;
+          }
+        }
+      }
+      return null;
+    };
+
+    return findFeatureById(this.rootFeature, featureId) ?? this.rootFeature;
   }
 
   // helper method to find and add the feature to the correct parent
