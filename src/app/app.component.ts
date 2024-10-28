@@ -29,7 +29,7 @@ import { Feature } from './models/feature';
     FeatureItemComponent,
   ],
 })
-export class AppComponent  {
+export class AppComponent {
   public get connectedDropListsIds(): string[] {
     return this.getIdsRecursive(this.rootFeature).reverse();
   }
@@ -40,7 +40,7 @@ export class AppComponent  {
     subFeatures: [],
     level: 0,
   };
- basicFeatures: Feature[] = [
+  basicFeatures: Feature[] = [
     { id: '1', name: 'Feature 1', level: 0 },
     { id: '2', name: 'Feature 2', level: 0 },
     { id: '3', name: 'Feature 3', level: 0 },
@@ -80,14 +80,14 @@ export class AppComponent  {
     } else {
       const draggedFeature = event.previousContainer.data[event.previousIndex];
       // console.log('Dragged feature:', draggedFeature);
-      
+
       // prevent to go over the max level of nested features
-      const nestedLevels = calculateNestedLevels(this.rootFeature);
+      const nestedLevels = this.calculateNestedLevels(parentFeature);
       //uncoment later
-      // if (nestedLevels > this.maxLevel) {
-      //   alert('Maximum level reached');
-      //   return;
-      // }
+      if (nestedLevels > this.maxLevel - 1) {
+        alert('Maximum level reached');
+        return;
+      }
 
       //if it is basic feature, create a copy of it. If not , just move it.
       if (this.basicFeatures.map((f) => f.id).includes(draggedFeature.id)) {
@@ -95,18 +95,11 @@ export class AppComponent  {
           ...draggedFeature,
           id: Date.now().toString(),
           subFeatures: [],
-
-          level: nestedLevels,
+          level: nestedLevels + 1,
         };
         //  event.container.data.push(newSubFeature);
-
-        this.addFeatureToParent(
-          event.container.id,
-          newSubFeature
-        );
+        this.addFeatureToParent(event.container.id, newSubFeature);
         // console.log( this.rootFeature);
-  
-        
       } else {
         transferArrayItem(
           event.previousContainer.data,
@@ -118,46 +111,45 @@ export class AppComponent  {
     }
   }
 
-// helper method to find and add the feature to the correct parent
-private addFeatureToParent(
-  parentFeatureId: string, 
-  newFeature: Feature
-): boolean {
-  // Check if the parent is the root feature
-  if (this.rootFeature.id === parentFeatureId) {
-    if (!this.rootFeature.subFeatures) {
-      this.rootFeature.subFeatures = [];
-    }
-    this.rootFeature.subFeatures.push(newFeature);
-    return true;
-  }
-
-  // Recursive function to search through the feature tree
-  const findAndAddToParent = (feature: Feature): boolean => {
-    if (!feature.subFeatures) {
-      return false;
-    }
-
-    // Check if current feature is the parent we're looking for
-    if (feature.id === parentFeatureId) {
-      feature.subFeatures.push(newFeature);
-        newFeature.name = feature.name + ' + ' + newFeature.name.substring(7);
+  // helper method to find and add the feature to the correct parent
+  private addFeatureToParent(
+    parentFeatureId: string,
+    newFeature: Feature
+  ): boolean {
+    // Check if the parent is the root feature
+    if (this.rootFeature.id === parentFeatureId) {
+      if (!this.rootFeature.subFeatures) {
+        this.rootFeature.subFeatures = [];
+      }
+      this.rootFeature.subFeatures.push(newFeature);
       return true;
     }
 
-    // Search through subfeatures
-    for (const subFeature of feature.subFeatures) {
-      if (findAndAddToParent(subFeature)) {
+    // Recursive function to search through the feature tree
+    const findAndAddToParent = (feature: Feature): boolean => {
+      if (!feature.subFeatures) {
+        return false;
+      }
+
+      // Check if current feature is the parent we're looking for
+      if (feature.id === parentFeatureId) {
+        feature.subFeatures.push(newFeature);
+        newFeature.name = feature.name + ' + ' + newFeature.name.substring(7);
         return true;
       }
-    }
 
-    return false;
-  };
+      // Search through subfeatures
+      for (const subFeature of feature.subFeatures) {
+        if (findAndAddToParent(subFeature)) {
+          return true;
+        }
+      }
 
-  return findAndAddToParent(this.rootFeature);
-}
+      return false;
+    };
 
+    return findAndAddToParent(this.rootFeature);
+  }
 
   private getIdsRecursive(feature: Feature): string[] {
     let ids = [feature.id];
@@ -167,16 +159,19 @@ private addFeatureToParent(
     });
     return ids;
   }
-}
 
-function calculateNestedLevels(rootFeature: Feature): number {
-  if (!rootFeature.subFeatures || rootFeature.subFeatures.length === 0) {
-    return 0;
+  private calculateNestedLevels(feature: Feature): number {
+    if (feature === this.rootFeature) {
+      return 0;
+    }
+    if (!feature.subFeatures || feature.subFeatures.length === 0) {
+      return 0;
+    }
+    let maxDepth = 0;
+    for (const subFeature of feature.subFeatures) {
+      const subDepth = this.calculateNestedLevels(subFeature);
+      maxDepth = Math.max(maxDepth, subDepth);
+    }
+    return maxDepth + 1;
   }
-  let maxDepth = 0;
-  for (const subFeature of rootFeature.subFeatures) {
-    const subDepth = calculateNestedLevels(subFeature);
-    maxDepth = Math.max(maxDepth, subDepth);
-  }
-  return maxDepth + 1;
 }
